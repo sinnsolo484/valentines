@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>5 Questions 💘</title>
+  <style>
+    :root{
+      --bg1:#ffdde1;
+      --bg2:#ee9ca7;
+      --card:#ffffffcc;
+      --text:#2b2b2b;
+      --accent:#ff3b7a;
+      --accent2:#7c3aed;
+      --shadow: 0 20px 60px rgba(0,0,0,.12);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--text);
+      background: radial-gradient(1200px 800px at 20% 10%, var(--bg1), transparent),
+                  radial-gradient(1200px 800px at 80% 90%, var(--bg2), transparent),
+                  linear-gradient(135deg, #fff5f7, #ffe3ee);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+      overflow:hidden;
+    }
+    .hearts{
+      position:fixed; inset:0; pointer-events:none; opacity:.22;
+      background-image:
+        radial-gradient(circle at 20% 20%, #ff3b7a 0 2px, transparent 3px),
+        radial-gradient(circle at 80% 30%, #7c3aed 0 2px, transparent 3px),
+        radial-gradient(circle at 40% 80%, #ff3b7a 0 2px, transparent 3px),
+        radial-gradient(circle at 60% 60%, #7c3aed 0 2px, transparent 3px);
+      animation: float 10s ease-in-out infinite alternate;
+    }
+    @keyframes float{ from{transform:translateY(0)} to{transform:translateY(-14px)} }
+
+    .card{
+      width:min(960px, 100%);
+      background:var(--card);
+      backdrop-filter: blur(10px);
+      border:1px solid rgba(255,255,255,.55);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: clamp(18px, 4vw, 38px);
+      position:relative;
+    }
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:16px;
+      flex-wrap:wrap;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,59,122,.12);
+      border:1px solid rgba(255,59,122,.2);
+      font-weight:700;
+    }
+    .progress{
+      font-size:13px;
+      opacity:.75;
+    }
+    .bar{
+      height:10px; width:220px;
+      background: rgba(0,0,0,.06);
+      border-radius: 999px;
+      overflow:hidden;
+      border: 1px solid rgba(0,0,0,.06);
+    }
+    .fill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border-radius: 999px;
+      transition: width .35s ease;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: clamp(14px, 3vw, 28px);
+      align-items:stretch;
+    }
+    @media (max-width: 860px){
+      .grid{grid-template-columns:1fr}
+      .bar{width:100%}
+    }
+
+    .left h1{
+      margin:0 0 10px;
+      font-size: clamp(28px, 4.6vw, 54px);
+      line-height:1.05;
+      letter-spacing:-.02em;
+    }
+    .sub{
+      font-size: clamp(14px, 1.8vw, 18px);
+      line-height:1.6;
+      opacity:.86;
+      margin: 0 0 16px;
+    }
+    .hint{
+      background: rgba(255,255,255,.65);
+      border: 1px dashed rgba(0,0,0,.12);
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-size:14px;
+      line-height:1.55;
+    }
+
+    .right{
+      background: rgba(255,255,255,.65);
+      border:1px solid rgba(255,255,255,.7);
+      border-radius: 22px;
+      padding: 18px;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-height: 290px;
+    }
+    .qtitle{
+      text-align:center;
+      font-weight:900;
+      font-size: 20px;
+      margin: 4px 0 12px;
+    }
+    .bigemoji{
+      text-align:center;
+      font-size: 70px;
+      margin-top: 6px;
+      filter: drop-shadow(0 10px 18px rgba(255,59,122,.22));
+    }
+    .options{
+      display:grid;
+      gap:10px;
+      margin: 14px 0 8px;
+    }
+    .opt{
+      border:1px solid rgba(0,0,0,.10);
+      background: rgba(255,255,255,.75);
+      border-radius: 16px;
+      padding: 12px 14px;
+      cursor:pointer;
+      font-weight:700;
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .opt:hover{ transform: translateY(-1px); filter: brightness(1.02); }
+    .opt.selected{
+      border-color: rgba(255,59,122,.55);
+      box-shadow: 0 10px 24px rgba(255,59,122,.18);
+    }
+
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-top: 12px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      border:0;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-weight:900;
+      cursor:pointer;
+      transition: transform .12s ease, filter .12s ease, opacity .12s ease;
+      user-select:none;
+    }
+    .btn:active{transform: translateY(1px)}
+    .back{ background: rgba(0,0,0,.07); color: rgba(0,0,0,.72); }
+    .next{ background: linear-gradient(135deg, var(--accent2), var(--accent)); color:white; }
+    .btn[disabled]{opacity:.45; cursor:not-allowed}
+
+    /* Final question buttons */
+    .btnrow{
+      position:relative;
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:10px;
+      min-height:60px;
+    }
+    .yes{
+      background: linear-gradient(135deg, #ff3b7a, #ff7aa2);
+      color: white;
+      min-width: 160px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.10);
+    }
+    .no{
+      background: rgba(0,0,0,.07);
+      color: rgba(0,0,0,.7);
+      min-width: 160px;
+      position:relative;
+      box-shadow: 0 12px 30px rgba(0,0,0,.08);
+    }
+
+    .tiny{font-size:12px; opacity:.72; text-align:center; margin-top:8px}
+
+    /* Modal + confetti */
+    .modal{
+      position:fixed; inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+      background: rgba(0,0,0,.35);
+      z-index:50;
+    }
+    .modal.show{display:flex}
+    .popup{
+      width:min(580px, 100%);
+      background:white;
+      border-radius: 22px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.25);
+      padding: 22px;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .popup h2{ margin:10px 0 6px; font-size: 28px; }
+    .popup p{ margin:0 0 14px; line-height:1.6; opacity:.86; }
+    .close{
+      margin-top: 6px;
+      background: linear-gradient(135deg, #7c3aed, #ff3b7a);
+      color:white;
+      border:0;
+      border-radius:999px;
+      padding:12px 16px;
+      font-weight:900;
+      cursor:pointer;
+    }
+    canvas#confetti{ position:fixed; inset:0; pointer-events:none; z-index:60; }
+  </style>
+</head>
+<body>
+  <div class="hearts"></div>
+  <canvas id="confetti"></canvas>
+
+  <main class="card">
+    <div class="top">
+      <div class="badge">💌 5 Questions for You</div>
+      <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end; flex:1; min-width:240px;">
+        <div class="progress"><span id="stepText">Question 1</span> / 5</div>
+        <div class="bar"><div class="fill" id="fill"></div></div>
+      </div>
+    </div>
+
+    <section class="grid">
+      <div class="left">
+        <h1 id="headline">Hey you 💗</h1>
+        <p class="sub" id="subtitle">
+          I made this little journey for you. Answer 5 tiny questions… and the last one is the big one 😌
+        </p>
+        <div class="hint" id="hintBox">
+          Tip: pick an answer on the right, then press <b>Next</b>.
+        </div>
+      </div>
+
+      <div class="right">
+        <div>
+          <div class="bigemoji" id="emoji">💖</div>
+          <div class="qtitle" id="qtitle">First question…</div>
+
+          <div id="options" class="options"></div>
+
+          <div id="finalButtons" style="display:none;">
+            <div class="btnrow" id="btnrow">
+              <button class="btn yes" id="yesBtn">YES 😍</button>
+              <button class="btn no" id="noBtn">NO 🙈</button>
+            </div>
+            <div class="tiny">(Try pressing “NO”… if you can 😉)</div>
+          </div>
+        </div>
+
+        <div class="nav" id="nav">
+          <button class="btn back" id="backBtn">← Back</button>
+          <button class="btn next" id="nextBtn" disabled>Next →</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="modal">
+    <div class="popup">
+      <div style="font-size:54px">🎉💞</div>
+      <h2>YAAAY! It’s a date!</h2>
+      <p id="successText">I can’t wait to spend Valentine’s with you 🥰</p>
+      <button class="close" id="closeBtn">Close 💗</button>
+      <div class="tiny" style="margin-top:10px; opacity:.7;">Screenshot this for memories ✨</div>
+    </div>
+  </div>
+
+<script>
+  // ====== Customize these 5 questions ======
+  const herName = "Love";     // change to her name
+  const yourName = "Me";      // change to your name
+
+  const steps = [
+    {
+      emoji: "🌙",
+      headline: `Hey ${herName} 💗`,
+      subtitle: "Quick warm-up…",
+      hint: "Pick one. No pressure. (But pick the cute one 😌)",
+      title: "Which vibe are we choosing for Valentine’s?",
+      options: ["Cozy & calm", "Fancy & cute", "Fun adventure", "Surprise me"]
+    },
+    {
+      emoji: "🍓",
+      headline: "Second question…",
+      subtitle: "I need expert opinion 😤",
+      hint: "This decision is extremely serious.",
+      title: "Pick a treat:",
+      options: ["Chocolate", "Strawberries", "Ice cream", "All of the above"]
+    },
+    {
+      emoji: "🎶",
+      headline: "Third question…",
+      subtitle: "For the playlist 😌",
+      hint: "Choose your mood and I’ll match it.",
+      title: "What’s our soundtrack?",
+      options: ["Soft romantic", "Hype & fun", "Old school classics", "Your choice"]
+    },
+    {
+      emoji: "📸",
+      headline: "Fourth question…",
+      subtitle: "Important: memories!",
+      hint: "I’m collecting moments with you.",
+      title: "One thing we MUST do:",
+      options: ["Take cute photos", "Long walk + talk", "Try something new", "Stay in & cuddle"]
+    },
+    {
+      emoji: "💘",
+      headline: "Final question…",
+      subtitle: `Okay ${herName}… here it is 🥺`,
+      hint: "You already know the answer 😭",
+      title: "Will you be my Valentine?",
+      options: [] // not used for final
+    }
+  ];
+
+  // ====== State ======
+  let current = 0;
+  const answers = Array(steps.length).fill(null);
+
+  // ====== Elements ======
+  const fill = document.getElementById("fill");
+  const stepText = document.getElementById("stepText");
+  const headline = document.getElementById("headline");
+  const subtitle = document.getElementById("subtitle");
+  const hintBox = document.getElementById("hintBox");
+  const emoji = document.getElementById("emoji");
+  const qtitle = document.getElementById("qtitle");
+  const optionsEl = document.getElementById("options");
+  const finalButtons = document.getElementById("finalButtons");
+  const nav = document.getElementById("nav");
+
+  const backBtn = document.getElementById("backBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const btnrow = document.getElementById("btnrow");
+
+  const modal = document.getElementById("modal");
+  const closeBtn = document.getElementById("closeBtn");
+
+  // ====== Render ======
+  function render(){
+    const step = steps[current];
+    stepText.textContent = `Question ${current+1}`;
+    fill.style.width = `${((current+1)/steps.length)*100}%`;
+
+    emoji.textContent = step.emoji;
+    headline.textContent = step.headline;
+    subtitle.textContent = step.subtitle;
+    hintBox.innerHTML = step.hint;
+
+    qtitle.textContent = step.title;
+
+    backBtn.disabled = current === 0;
+
+    // Final step: show YES/NO, hide options + next
+    const isFinal = current === steps.length - 1;
+    optionsEl.style.display = isFinal ? "none" : "grid";
+    finalButtons.style.display = isFinal ? "block" : "none";
+    nextBtn.style.display = isFinal ? "none" : "inline-flex";
+
+    // Build options for non-final steps
+    optionsEl.innerHTML = "";
+    if(!isFinal){
+      step.options.forEach((opt, idx) => {
+        const div = document.createElement("div");
+        div.className = "opt";
+        div.textContent = opt;
+        if(answers[current] === idx) div.classList.add("selected");
+        div.addEventListener("click", () => {
+          answers[current] = idx;
+          Array.from(optionsEl.children).forEach(c => c.classList.remove("selected"));
+          div.classList.add("selected");
+          nextBtn.disabled = false;
+        });
+        optionsEl.appendChild(div);
+      });
+      nextBtn.disabled = answers[current] === null;
+    }
+  }
+
+  // ====== Navigation ======
+  backBtn.addEventListener("click", () => {
+    if(current > 0){ current--; render(); }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if(current < steps.length - 1){
+      current++;
+      render();
+    }
+  });
+
+  // ====== The runaway NO button ======
+  function moveNoButton(){
+    const rect = btnrow.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
+    const maxX = rect.width - btnRect.width;
+    const maxY = rect.height - btnRect.height;
+
+    const x = Math.max(0, Math.min(maxX, Math.random() * maxX));
+    const y = Math.max(0, Math.min(maxY, Math.random() * maxY));
+
+    noBtn.style.position = "absolute";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+  }
+  noBtn.addEventListener("mouseenter", moveNoButton);
+  noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); moveNoButton(); }, {passive:false});
+
+  // ====== YES => confetti + modal ======
+  yesBtn.addEventListener("click", () => {
+    startConfetti(1800);
+    modal.classList.add("show");
+  });
+  closeBtn.addEventListener("click", () => modal.classList.remove("show"));
+  modal.addEventListener("click", (e) => { if(e.target === modal) modal.classList.remove("show"); });
+
+  // ====== Confetti (tiny, no libraries) ======
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+  let W, H;
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  let confetti = [];
+  function makePiece(){
+    return {
+      x: Math.random()*W,
+      y: -20,
+      r: 4 + Math.random()*6,
+      vx: -2 + Math.random()*4,
+      vy: 3 + Math.random()*6,
+      a: Math.random()*Math.PI*2,
+      va: -0.2 + Math.random()*0.4
+    };
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    confetti.forEach(p=>{
+      p.x += p.vx; p.y += p.vy; p.a += p.va;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.a);
+      ctx.fillStyle = Math.random() > 0.5 ? "rgba(255,59,122,.9)" : "rgba(124,58,237,.9)";
+      ctx.fillRect(-p.r, -p.r, p.r*2, p.r*2);
+      ctx.restore();
+    });
+    confetti = confetti.filter(p => p.y < H + 30);
+    if(confetti.length) requestAnimationFrame(draw);
+  }
+  function startConfetti(ms=1500){
+    const end = Date.now()+ms;
+    confetti = [];
+    (function burst(){
+      for(let i=0;i<14;i++) confetti.push(makePiece());
+      if(Date.now()<end) requestAnimationFrame(burst);
+    })();
+    draw();
+  }
+
+  // Init
+  render();
+</script>
+</body>
+</html>
